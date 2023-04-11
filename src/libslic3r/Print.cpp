@@ -375,14 +375,18 @@ bool Print::has_brim() const
     return std::any_of(m_objects.begin(), m_objects.end(), [](PrintObject *object) { return object->has_brim(); });
 }
 
+//what does sequential_print_horizontal_clearance_valid do?
 bool Print::sequential_print_horizontal_clearance_valid(const Print& print, Polygons* polygons)
 {
+
 	Polygons convex_hulls_other;
     if (polygons != nullptr)
         polygons->clear();
     std::vector<size_t> intersecting_idxs;
 
 	std::map<ObjectID, Polygon> map_model_object_to_convex_hull;
+    // what does the following for loop do?
+
 	for (const PrintObject *print_object : print.objects()) {
 	    assert(! print_object->model_object()->instances.empty());
 	    assert(! print_object->instances().empty());
@@ -391,7 +395,7 @@ bool Print::sequential_print_horizontal_clearance_valid(const Print& print, Poly
         // Get convex hull of all printable volumes assigned to this print object.
         ModelInstance *model_instance0 = print_object->model_object()->instances.front();
 	    if (it_convex_hull == map_model_object_to_convex_hull.end()) {
-	        // Calculate the convex hull of a printable object. 
+	        // Calculate the convex hull of a printable object.
 	        // Grow convex hull with the clearance margin.
 	        // FIXME: Arrangement has different parameters for offsetting (jtMiter, limit 2)
 	        // which causes that the warning will be showed after arrangement with the
@@ -469,12 +473,12 @@ std::string Print::validate(std::string* warning) const
     if (extruders.empty())
         return _u8L("The supplied settings will cause an empty print.");
 
-    if (m_config.complete_objects) {
-    	if (! sequential_print_horizontal_clearance_valid(*this))
+/*    if (m_config.complete_objects) {
+    	if ( sequential_print_horizontal_clearance_valid(*this))
             return _u8L("Some objects are too close; your extruder will collide with them.");
         if (! sequential_print_vertical_clearance_valid(*this))
 	        return _u8L("Some objects are too tall and cannot be printed without extruder collisions.");
-    }
+    }*/
 
     if (m_config.avoid_crossing_perimeters && m_config.avoid_crossing_curled_overhangs) {
         return _u8L("Avoid crossing perimeters option and avoid crossing curled overhangs option cannot be both enabled together.");
